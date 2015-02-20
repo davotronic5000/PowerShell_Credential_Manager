@@ -24,5 +24,25 @@ namespace PSCredentialManager.CredentialManagerApi.DataStructures
         public IntPtr Attributes;
         public string TargetAlias;
         public string UserName;
+
+        public PSCredential ToPsCredential()
+        {
+            if (this.UserName != null && this.CredentialBlob != null)
+            {
+                SecureString Password = new SecureString();
+                PSCredential PsCred;
+                foreach (char c in this.CredentialBlob)
+                {
+                    Password.AppendChar(c);
+                }
+                PsCred = new PSCredential(this.UserName, Password);
+                return PsCred;
+            }
+            else
+            {
+                throw new Exception("Unable to convert credential with now username or password to PS Credential");
+            }
+            
+        }
     }
 }

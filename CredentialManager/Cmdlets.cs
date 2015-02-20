@@ -13,89 +13,118 @@ using System.Security;
 
 namespace PSCredentialManager
 {
-    //[Cmdlet(VerbsCommon.Get, "StoredCredential")]
-    //public class GetCredential : PSCmdlet
-    //{
-    //    //Parameters
-    //    [Parameter(Mandatory = true, ValueFromPipeline = true)]
-    //    [ValidateLength(1, 337)]
-    //    public string Target;
+    [Cmdlet(VerbsCommon.Get, "StoredCredential")]
+    public class GetCredential : PSCmdlet
+    {
+        //Parameters
+        [Parameter()]
+        [ValidateLength(1, 337)]
+        public string Target;
 
-    //    [Parameter()]
-    //    [ValidateSet("GENERIC", "DOMAIN_PASSWORD", "DOMAIN_CERTIFICATE", "DOMAIN_VISIBLE_PASSWORD", "GENERIC_CERTIFICATE", "DOMAIN_EXTENDED", "MAXIMUM", "MAXIMUM_EX")]
-    //    public string Type = "GENERIC";
+        [Parameter()]
+        public CRED_TYPE Type = CRED_TYPE.GENERIC;
 
-    //    [Parameter()]
-    //    public bool AsPsCredential = true;
+        [Parameter()]
+        public bool AsPsCredential = true;
 
-    //    //Initiate variables and credential manager
-    //    CRED_TYPE CredType = new CRED_TYPE();
-    //    CredentialManager Manager = new CredentialManager();
-    //    PSCredential PsCred;
+        //Initiate variables and credential manager
+        CredentialManager Manager = new CredentialManager();
+        PSCredential PsCredential;
 
-    //    protected override void BeginProcessing()
-    //    {
-    //        try
-    //        {
-    //            CredType = Manager.CredTypeFromString(Type);
-    //        }
-    //        catch
-    //        {
-    //            //write error here
-    //        }
-    //    }
+        protected override void BeginProcessing()
+        {
 
-    //    protected override void ProcessRecord()
-    //    {
-    //        Credential Cred = new Credential();
+        }
 
-    //        try
-    //        {
-    //            WriteVerbose("Retrieving Credential record from Windows Credential Manager");
-    //            Manager.CredRead(Target, CredType, out Cred);
-    //        }
-    //        catch (Exception Ex)
-    //        {
-    //            //Write Error
-    //        }
+        protected override void ProcessRecord()
+        {
+            if (Target == null)
+            {
+                //If no target is specified get all available credentials from the store
+                Credential[] credential;
+                try
+                {                    
+                    credential = Manager.ReadCred();
 
-    //        if (Cred.TargetName != null)
-    //        {
-    //            if (AsPsCredential)
-    //            {
-    //                try
-    //                {
-    //                    //Create PSCredential Object
-    //                    WriteVerbose("Converting returned credential blob to PSCredential Object");
-    //                    PsCred = Cred.ToPsCredential();
-    //                }
-    //                catch (Exception Ex)
-    //                {
-    //                    //Write Error here
-    //                }
+                    if (AsPsCredential)
+                    {
+                        //if AsPSCredential is specified create PS credential object and write to pipeline
+                        WriteVerbose("Converting returned credentials to PSCredential Object");
+                        foreach (Credential Cred in credential)
+                        {
+                            try
+                            {
+                                PsCredential = Cred.ToPsCredential();
+                                WriteObject(PsCredential);
+                            }
+                            catch
+                            {
+                                WriteWarning("Unable to convert Credential object without username or password to PSCredential object");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //write credential object to pipeline
+                        WriteObject(credential);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    ErrorRecord errorRecord = new ErrorRecord(exception, "1", ErrorCategory.InvalidOperation, Target);
+                    ThrowTerminatingError(errorRecord);
+                }
+            }
+            else
+            {
+                Credential credential = new Credential();
+                try
+                {
+                    //Retrieve credential from Cred Store
+                    WriteVerbose("Retrieving requested credential from Windows Credential Manager");
+                    credential = Manager.ReadCred(Target, Type);
+                }
+                catch (Exception exception)
+                {
+                    ErrorRecord errorRecord = new ErrorRecord(exception, "1", ErrorCategory.InvalidOperation, Target);
+                    ThrowTerminatingError(errorRecord);
+                }
 
-    //                WriteObject(PsCred);
-    //            }
-    //            else
-    //            {
-    //                WriteObject(Cred);
-    //            }
-    //        }
-    //    }
+                if (AsPsCredential)
+                {
+                    //if AsPSCredential is specified create PS credential object and write to pipeline
+                    WriteVerbose("Converting returned credential blob to PSCredential Object");
+                    try
+                    {
+                        PsCredential = credential.ToPsCredential();
+                        WriteObject(PsCredential);
+                    }
+                    catch
+                    {
+                        WriteWarning("Unable to convert Credential object without username or password to PSCredential object");
+                    }
+                }
+                else
+                {
+                    //write credential object to pipeline
+                    WriteObject(credential);
+                }
+            }            
+        }
 
-    //    protected override void EndProcessing()
-    //    {
+        protected override void EndProcessing()
+        {
 
-    //    }
-    //}
+        }
+    }
 
     [Cmdlet(VerbsCommon.New, "StoredCredential")]
     public class NewCredential : PSCmdlet
     {
         //Parameters
-        [Parameter(Mandatory = true)]
+        [Parameter()]
         [ValidateLength(1, 337)]
-        public string Target;
+        public string Target = System.Environment.MachineName;
 
         [Parameter()]
         public string UserName = System.Environment.UserName.ToString();
@@ -104,22 +133,18 @@ namespace PSCredentialManager
         public string Password;
 
         [Parameter()]
-        public string Comment = "Updated by: " + System.Environment.UserName.ToString() + "on: " + DateTime.Now.ToShortDateString();
+        public string Comment = "Updated by: " + System.Environment.UserName.ToString() + " on: " + DateTime.Now.ToShortDateString();
 
         [Parameter()]
-        [ValidateSet("GENERIC", "DOMAIN_PASSWORD", "DOMAIN_CERTIFICATE", "DOMAIN_VISIBLE_PASSWORD", "GENERIC_CERTIFICATE", "DOMAIN_EXTENDED", "MAXIMUM", "MAXIMUM_EX")]
-        public string Type = "GENERIC";
+        public CRED_TYPE Type = CRED_TYPE.GENERIC;
 
         [Parameter()]
-        [ValidateSet("SESSION", "LOCAL_MACHINE", "ENTERPRISE")]
-        public string Persist = "SESSION";
+        public CRED_PERSIST Persist = CRED_PERSIST.SESSION;
 
         //Initiate variables and credential manager
         CredentialManager Manager = new CredentialManager();
         Credential Credential = new Credential();
         NativeCredential nativeCredential = new NativeCredential();
-        CRED_PERSIST CredPersist = new CRED_PERSIST();
-        CRED_TYPE CredType = new CRED_TYPE();
 
         protected override void BeginProcessing()
         {
@@ -131,12 +156,7 @@ namespace PSCredentialManager
                 Exception exception = new ArgumentOutOfRangeException("Password", "The specified password has exceeded 512 bytes");
                 ErrorRecord error = new ErrorRecord(exception, "1", ErrorCategory.InvalidArgument , Password);
                 WriteError(error);
-            }
-
-            //Convert Type and Persistance to marshalable properties
-            CredPersist = Manager.CredPersistFromString(Persist);
-            CredType = Manager.CredTypeFromString(Type);
-                
+            }               
         }
 
         protected override void ProcessRecord()
@@ -149,8 +169,8 @@ namespace PSCredentialManager
             Credential.Attributes = IntPtr.Zero;
             Credential.Comment = Comment;
             Credential.TargetAlias = null;
-            Credential.Type = CredType;
-            Credential.Persist = CredPersist;
+            Credential.Type = Type;
+            Credential.Persist = Persist;
 
             //Convert credential to native credential
             nativeCredential = NativeCredential.GetNativeCredential(Credential);

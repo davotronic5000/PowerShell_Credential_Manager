@@ -11,7 +11,6 @@ namespace PSCredentialManager.CredentialManagerApi.Support
 {
     sealed class CriticalCredentialHandle : CriticalHandleZeroOrMinusOneIsInvalid
     {
-        // Set the handle.
         internal CriticalCredentialHandle(IntPtr preexistingHandle)
         {
             SetHandle(preexistingHandle);
@@ -28,8 +27,7 @@ namespace PSCredentialManager.CredentialManagerApi.Support
                 // Create a managed Credential type and fill it with data from the native counterpart.
                 Credential cred = new Credential();
                 cred.CredentialBlobSize = ncred.CredentialBlobSize;
-                cred.CredentialBlob = Marshal.PtrToStringUni(ncred.CredentialBlob,
-       (int)ncred.CredentialBlobSize / 2);
+                cred.CredentialBlob = Marshal.PtrToStringUni(ncred.CredentialBlob,(int)ncred.CredentialBlobSize / 2);
                 cred.UserName = Marshal.PtrToStringUni(ncred.UserName);
                 cred.TargetName = Marshal.PtrToStringUni(ncred.TargetName);
                 cred.TargetAlias = Marshal.PtrToStringUni(ncred.TargetAlias);
@@ -43,10 +41,6 @@ namespace PSCredentialManager.CredentialManagerApi.Support
                 throw new InvalidOperationException("Invalid CriticalHandle!");
             }
         }
-
-        // Perform any specific actions to release the handle in the ReleaseHandle method.
-        // Often, you need to use Pinvoke to make a call into the Win32 API to release the 
-        // handle. In this case, however, we can use the Marshal class to release the unmanaged memory.
 
         override protected bool ReleaseHandle()
         {
@@ -62,6 +56,43 @@ namespace PSCredentialManager.CredentialManagerApi.Support
             }
             // Return false. 
             return false;
+        }
+
+        public Credential[] GetCredentials(int count)
+        {
+            if (IsInvalid)
+            {
+                throw new InvalidOperationException("Invalid CriticalHandle!");
+            }
+
+            Credential[] Credentials = new Credential[count];
+            IntPtr pTemp = IntPtr.Zero;
+            for (int inx = 0; inx < count; inx++)
+            {
+                pTemp = Marshal.ReadIntPtr(handle, inx * IntPtr.Size);
+                Credential cred = XlateNativeCred(pTemp);
+                Credentials[inx] = cred;
+            }
+            return Credentials;
+        }
+
+        public Credential XlateNativeCred(IntPtr pCred)
+        {
+            NativeCredential ncred = (NativeCredential)Marshal.PtrToStructure(pCred, typeof(NativeCredential));
+            Credential cred = new Credential();
+            cred.Type = ncred.Type;
+            cred.Flags = ncred.Flags;
+            cred.Persist = (CRED_PERSIST)ncred.Persist;
+            cred.UserName = Marshal.PtrToStringUni(ncred.UserName);
+            cred.TargetName = Marshal.PtrToStringUni(ncred.TargetName);
+            cred.TargetAlias = Marshal.PtrToStringUni(ncred.TargetAlias);
+            cred.Comment = Marshal.PtrToStringUni(ncred.Comment);
+            cred.CredentialBlobSize = ncred.CredentialBlobSize;
+            if (0 < ncred.CredentialBlobSize)
+            {
+                cred.CredentialBlob = Marshal.PtrToStringUni(ncred.CredentialBlob, (int)ncred.CredentialBlobSize / 2);
+            }
+            return cred;
         }
     }
 }
