@@ -129,8 +129,8 @@ namespace PSCredentialManager
         [Parameter()]
         public string UserName = System.Environment.UserName.ToString();
 
-        [Parameter(Mandatory = true)]
-        public string Password;
+        [Parameter()]
+        public string Password = System.Web.Security.Membership.GeneratePassword(10, 2);
 
         [Parameter()]
         public string Comment = "Updated by: " + System.Environment.UserName.ToString() + " on: " + DateTime.Now.ToShortDateString();
@@ -180,6 +180,7 @@ namespace PSCredentialManager
                 //Write credential to Windows Credential manager
                 WriteVerbose("Writing credential to Windows Credential Manager");
                 Manager.WriteCred(nativeCredential);
+                WriteObject(Credential);
             }
             catch (Exception exception)
             {
@@ -198,7 +199,7 @@ namespace PSCredentialManager
     public class RemoveStoredCredential : PSCmdlet
     {
         //Parameters
-        [Parameter()]
+        [Parameter(Mandatory = true)]
         public string Target;
 
         [Parameter()]
@@ -226,6 +227,36 @@ namespace PSCredentialManager
                 ErrorRecord errorRecord = new ErrorRecord(exception, "1", ErrorCategory.InvalidOperation, Target);
                 WriteError(errorRecord);
             }
+        }
+
+        protected override void EndProcessing()
+        {
+            
+        }
+    }
+
+    [Cmdlet(VerbsCommon.Get, "StrongPassword")]
+    public class GetStrongPassword : PSCmdlet
+    {
+        //Parameters
+        [Parameter()]
+        public int Length = 10;
+
+        [Parameter()]
+        public int NumberOfSpecialCharacters = 3;
+
+        //Initiate variables
+        string Password = string.Empty;
+
+        protected override void BeginProcessing()
+        {
+            Password = System.Web.Security.Membership.GeneratePassword(Length, NumberOfSpecialCharacters);
+            WriteObject(Password);
+        }
+
+        protected override void ProcessRecord()
+        {
+            
         }
 
         protected override void EndProcessing()
