@@ -10,20 +10,17 @@ namespace PSCredentialManager.CredentialManagerApi.Support
 {
     class CredentialManager
     {
-        public int WriteCred(NativeCredential Credential)
+        public bool WriteCred(NativeCredential Credential)
         {
             // Write the info into the CredMan storage.
             bool written = Imports.CredWrite(ref Credential, 0);
             int LastError = Marshal.GetLastWin32Error();
-            if (written)
-            {
-                return 0;
-            }
-            else
+            if (!written)
             {
                 string message = string.Format("CredWrite failed with the error code {0}.", LastError);
                 throw new Exception(message);
             }
+            return written;
         }
 
         public Credential ReadCred(string target, CRED_TYPE type)
@@ -46,6 +43,19 @@ namespace PSCredentialManager.CredentialManagerApi.Support
                 string message = string.Format("CredRead failed with the error code {0}.", LastError);
                 throw new Exception(message);
             }
+        }
+
+        public bool DeleteCred(string target, CRED_TYPE type)
+        {
+            bool Delete = Imports.CredDelete(target, type, 0);
+            int LastError = Marshal.GetLastWin32Error();
+            
+            if (!Delete)
+            {
+                string message = string.Format("CredRead failed with the error code {0}.", LastError);
+                throw new Exception(message);
+            }
+            return Delete;
         }
 
         public Credential[] ReadCred()

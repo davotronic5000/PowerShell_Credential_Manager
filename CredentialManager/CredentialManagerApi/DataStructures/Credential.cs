@@ -25,6 +25,24 @@ namespace PSCredentialManager.CredentialManagerApi.DataStructures
         public string TargetAlias;
         public string UserName;
 
+        public Credential ConvertToCredential(NativeCredential nativeCredential)
+        {
+            Credential credential = new Credential();
+            credential.Type = nativeCredential.Type;
+            credential.Flags = nativeCredential.Flags;
+            credential.Persist = (CRED_PERSIST)nativeCredential.Persist;
+            credential.UserName = Marshal.PtrToStringUni(nativeCredential.UserName);
+            credential.TargetName = Marshal.PtrToStringUni(nativeCredential.TargetName);
+            credential.TargetAlias = Marshal.PtrToStringUni(nativeCredential.TargetAlias);
+            credential.Comment = Marshal.PtrToStringUni(nativeCredential.Comment);
+            credential.CredentialBlobSize = nativeCredential.CredentialBlobSize;
+            if (0 < nativeCredential.CredentialBlobSize)
+            {
+                credential.CredentialBlob = Marshal.PtrToStringUni(nativeCredential.CredentialBlob, (int)nativeCredential.CredentialBlobSize / 2);
+            }
+            return credential;
+        }
+
         public PSCredential ToPsCredential()
         {
             if (this.UserName != null && this.CredentialBlob != null)

@@ -21,20 +21,12 @@ namespace PSCredentialManager.CredentialManagerApi.Support
             if (!IsInvalid)
             {
                 // Get the Credential from the mem location
-                NativeCredential ncred = (NativeCredential)Marshal.PtrToStructure(handle,
-                      typeof(NativeCredential));
+                NativeCredential nativeCredential = (NativeCredential)Marshal.PtrToStructure(handle,typeof(NativeCredential));
 
                 // Create a managed Credential type and fill it with data from the native counterpart.
-                Credential cred = new Credential();
-                cred.CredentialBlobSize = ncred.CredentialBlobSize;
-                cred.CredentialBlob = Marshal.PtrToStringUni(ncred.CredentialBlob,(int)ncred.CredentialBlobSize / 2);
-                cred.UserName = Marshal.PtrToStringUni(ncred.UserName);
-                cred.TargetName = Marshal.PtrToStringUni(ncred.TargetName);
-                cred.TargetAlias = Marshal.PtrToStringUni(ncred.TargetAlias);
-                cred.Type = ncred.Type;
-                cred.Flags = ncred.Flags;
-                cred.Persist = (CRED_PERSIST)ncred.Persist;
-                return cred;
+                Credential credential = new Credential();
+                credential = credential.ConvertToCredential(nativeCredential);
+                return credential;
             }
             else
             {
@@ -66,33 +58,16 @@ namespace PSCredentialManager.CredentialManagerApi.Support
             }
 
             Credential[] Credentials = new Credential[count];
-            IntPtr pTemp = IntPtr.Zero;
             for (int inx = 0; inx < count; inx++)
             {
-                pTemp = Marshal.ReadIntPtr(handle, inx * IntPtr.Size);
-                Credential cred = XlateNativeCred(pTemp);
-                Credentials[inx] = cred;
+                IntPtr pCred = Marshal.ReadIntPtr(handle, inx * IntPtr.Size);
+                NativeCredential nativeCredential = (NativeCredential)Marshal.PtrToStructure(pCred, typeof(NativeCredential));
+                Credential credential = new Credential();
+                credential = credential.ConvertToCredential(nativeCredential);
+                Credentials[inx] = credential;
             }
             return Credentials;
         }
 
-        public Credential XlateNativeCred(IntPtr pCred)
-        {
-            NativeCredential ncred = (NativeCredential)Marshal.PtrToStructure(pCred, typeof(NativeCredential));
-            Credential cred = new Credential();
-            cred.Type = ncred.Type;
-            cred.Flags = ncred.Flags;
-            cred.Persist = (CRED_PERSIST)ncred.Persist;
-            cred.UserName = Marshal.PtrToStringUni(ncred.UserName);
-            cred.TargetName = Marshal.PtrToStringUni(ncred.TargetName);
-            cred.TargetAlias = Marshal.PtrToStringUni(ncred.TargetAlias);
-            cred.Comment = Marshal.PtrToStringUni(ncred.Comment);
-            cred.CredentialBlobSize = ncred.CredentialBlobSize;
-            if (0 < ncred.CredentialBlobSize)
-            {
-                cred.CredentialBlob = Marshal.PtrToStringUni(ncred.CredentialBlob, (int)ncred.CredentialBlobSize / 2);
-            }
-            return cred;
-        }
     }
 }

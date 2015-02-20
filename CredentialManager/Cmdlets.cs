@@ -14,7 +14,7 @@ using System.Security;
 namespace PSCredentialManager
 {
     [Cmdlet(VerbsCommon.Get, "StoredCredential")]
-    public class GetCredential : PSCmdlet
+    public class GetStoredCredential : PSCmdlet
     {
         //Parameters
         [Parameter()]
@@ -119,7 +119,7 @@ namespace PSCredentialManager
     }
 
     [Cmdlet(VerbsCommon.New, "StoredCredential")]
-    public class NewCredential : PSCmdlet
+    public class NewStoredCredential : PSCmdlet
     {
         //Parameters
         [Parameter()]
@@ -173,7 +173,7 @@ namespace PSCredentialManager
             Credential.Persist = Persist;
 
             //Convert credential to native credential
-            nativeCredential = NativeCredential.GetNativeCredential(Credential);
+            nativeCredential = NativeCredential.ConvertToNativeCredential(Credential);
             
             try
             {
@@ -191,6 +191,46 @@ namespace PSCredentialManager
         protected override void EndProcessing()
         {
 
+        }
+    }
+
+    [Cmdlet(VerbsCommon.Remove, "StoredCredential")]
+    public class RemoveStoredCredential : PSCmdlet
+    {
+        //Parameters
+        [Parameter()]
+        public string Target;
+
+        [Parameter()]
+        public CRED_TYPE Type = CRED_TYPE.GENERIC;
+
+
+        //Initiate Variables
+        CredentialManager Manager = new CredentialManager();
+
+        protected override void BeginProcessing()
+        {
+            
+        }
+
+        protected override void ProcessRecord()
+        {
+            //Delete credential from store
+            try
+            {
+                WriteVerbose("Deleteing requested credential from Windows Credential Manager");
+                Manager.DeleteCred(Target, Type);
+            }
+            catch (Exception exception)
+            {
+                ErrorRecord errorRecord = new ErrorRecord(exception, "1", ErrorCategory.InvalidOperation, Target);
+                WriteError(errorRecord);
+            }
+        }
+
+        protected override void EndProcessing()
+        {
+            
         }
     }
 }

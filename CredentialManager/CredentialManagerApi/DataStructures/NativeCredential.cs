@@ -23,7 +23,7 @@ namespace PSCredentialManager.CredentialManagerApi.DataStructures
         public IntPtr TargetAlias;
         public IntPtr UserName;
       
-        internal static NativeCredential GetNativeCredential(Credential Credential)
+        internal static NativeCredential ConvertToNativeCredential(Credential Credential)
         {
             NativeCredential nativeCredential = new NativeCredential();
             nativeCredential.AttributeCount = 0;
