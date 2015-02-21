@@ -1,4 +1,4 @@
-# PowerShell_Credential_Manager
+# PowerShell Credential Manager
 PowerShell Module to Read and Write Credentials from the Windows Credential Manager
 
 ## Installation
