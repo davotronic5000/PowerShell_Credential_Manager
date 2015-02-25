@@ -22,7 +22,7 @@ Import the module in to your PowerShell session and full help is available in th
 ## History
 
 ### v1.1 Bug Fix
-- Fixed a bug where the username spcified in the -UserName parameter was not being used to create the credential in the store.  The username for the logged on user was being used intead.  Issue logged https://github.com/davotronic5000/PowerShell_Credential_Manager/issues/8
+Fixed a bug where the username specified in the -UserName parameter was not being used to create the credential in the store. The username for the logged on user was being used instead. Issue logged https://github.com/davotronic5000/PowerShell_Credential_Manager/issues/8
 
 
 ### v1.0 Initial Release
