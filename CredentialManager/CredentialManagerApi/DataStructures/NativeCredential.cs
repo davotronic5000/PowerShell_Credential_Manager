@@ -35,7 +35,7 @@ namespace PSCredentialManager.CredentialManagerApi.DataStructures
             nativeCredential.CredentialBlobSize = (UInt32)Credential.CredentialBlobSize;
             nativeCredential.TargetName = Marshal.StringToCoTaskMemUni(Credential.TargetName);
             nativeCredential.CredentialBlob = Marshal.StringToCoTaskMemUni(Credential.CredentialBlob);
-            nativeCredential.UserName = Marshal.StringToCoTaskMemUni(System.Environment.UserName);
+            nativeCredential.UserName = Marshal.StringToCoTaskMemUni(Credential.UserName);
             return nativeCredential;
         }
     }

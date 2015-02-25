@@ -171,6 +171,7 @@ namespace PSCredentialManager
             Credential.TargetAlias = null;
             Credential.Type = Type;
             Credential.Persist = Persist;
+            Credential.UserName = UserName;
 
             //Convert credential to native credential
             nativeCredential = NativeCredential.ConvertToNativeCredential(Credential);
