@@ -24,3 +24,4 @@ namespace PSCredentialManager.Common
         public IntPtr TargetAlias;
         public IntPtr UserName;
     }
+}

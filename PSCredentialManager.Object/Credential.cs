@@ -24,3 +24,4 @@ namespace PSCredentialManager.Common
         public string TargetAlias;
         public string UserName;
     }
+}

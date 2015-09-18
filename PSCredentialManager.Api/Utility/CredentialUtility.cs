@@ -67,7 +67,7 @@ namespace PSCredentialManager.Api.Utility
                 throw new Exception("PSCredentialManager.Api.CredentialUtility.ConvertToNativeCredential Unable to convert credential to native credential.", ex);
             }
 
-            return nativeCredential
+            return nativeCredential;
         }
     }
 }

@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Management.Automation;
-using PSCredentialManager.CredentialManagerApi;
-using System.Runtime.InteropServices;
-using PSCredentialManager.CredentialManagerApi.Enums;
-using PSCredentialManager.CredentialManagerApi.DataStructures;
-using PSCredentialManager.CredentialManagerApi.Support;
-using System.Security;
+using PSCredentialManager.Object.Enum;
+using PSCredentialManager.Api;
+using PSCredentialManager.Common;
+using PSCredentialManager.Utility;
+using PSCredentialManager.Api.Utility;
 
 namespace PSCredentialManager
 {
@@ -50,11 +46,11 @@ namespace PSCredentialManager
                     {
                         //if AsPSCredential is specified create PS credential object and write to pipeline
                         WriteVerbose("Converting returned credentials to PSCredential Object");
-                        foreach (Credential Cred in credential)
+                        foreach (Credential cred in credential)
                         {
                             try
                             {
-                                PsCredential = Cred.ToPsCredential();
+                                PsCredential = PSCredentialUtility.ConvertToPSCredential(cred);
                                 WriteObject(PsCredential);
                             }
                             catch
@@ -96,7 +92,7 @@ namespace PSCredentialManager
                     WriteVerbose("Converting returned credential blob to PSCredential Object");
                     try
                     {
-                        PsCredential = credential.ToPsCredential();
+                        PsCredential = PSCredentialUtility.ConvertToPSCredential(credential);
                         WriteObject(PsCredential);
                     }
                     catch
@@ -174,7 +170,7 @@ namespace PSCredentialManager
             Credential.UserName = UserName;
 
             //Convert credential to native credential
-            nativeCredential = NativeCredential.ConvertToNativeCredential(Credential);
+            nativeCredential = CredentialUtility.ConvertToNativeCredential(Credential);
             
             try
             {
