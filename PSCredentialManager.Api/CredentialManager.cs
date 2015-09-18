@@ -1,14 +1,15 @@
-﻿using PSCredentialManager.CredentialManagerApi.Enums;
-using PSCredentialManager.CredentialManagerApi.DataStructures;
+﻿using PSCredentialManager.Common;
+using PSCredentialManager.Object.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace PSCredentialManager.CredentialManagerApi.Support
+namespace PSCredentialManager.Api
 {
-    class CredentialManager
+    public class CredentialManager
     {
         public bool WriteCred(NativeCredential Credential)
         {
@@ -49,7 +50,7 @@ namespace PSCredentialManager.CredentialManagerApi.Support
         {
             bool Delete = Imports.CredDelete(target, type, 0);
             int LastError = Marshal.GetLastWin32Error();
-            
+
             if (!Delete)
             {
                 string message = string.Format("CredRead failed with the error code {0}.", LastError);
@@ -65,20 +66,20 @@ namespace PSCredentialManager.CredentialManagerApi.Support
             string Filter = null;
             Credential[] Credentials;
 
-                if (6 <= Environment.OSVersion.Version.Major)
-                {
-                    Flags = 0x1;
-                }
-                else
-                {
-                    string message = "Retrieving all credentials is only possible on Windows version Vista or later.";
-                    throw new Exception(message);
-                }
+            if (6 <= Environment.OSVersion.Version.Major)
+            {
+                Flags = 0x1;
+            }
+            else
+            {
+                string message = "Retrieving all credentials is only possible on Windows version Vista or later.";
+                throw new Exception(message);
+            }
 
             IntPtr pCredentials = IntPtr.Zero;
             bool Read = Imports.CredEnumerate(Filter, Flags, out Count, out pCredentials);
             int LastError = Marshal.GetLastWin32Error();
-            
+
             if (Read)
             {
                 CriticalCredentialHandle CredHandle = new CriticalCredentialHandle(pCredentials);
