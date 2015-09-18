@@ -1,14 +1,15 @@
-﻿using PSCredentialManager.CredentialManagerApi.Enums;
-using PSCredentialManager.CredentialManagerApi.DataStructures;
+﻿using PSCredentialManager.Common;
+using PSCredentialManager.Object.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace PSCredentialManager.CredentialManagerApi.Support
+namespace PSCredentialManager.Api
 {
-    class Imports
+    public class Imports
     {
         [DllImport("Advapi32.dll", EntryPoint = "CredReadW", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern bool CredRead([In] string target, [In] CRED_TYPE type, [In] int reservedFlag, out IntPtr CredentialPtr);

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace PSCredentialManager.CredentialManagerApi.Enums
+namespace PSCredentialManager.Object.Enum
 {
     public enum CRED_TYPE : uint
     {

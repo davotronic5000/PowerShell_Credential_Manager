@@ -1,13 +1,14 @@
-﻿using PSCredentialManager.CredentialManagerApi.Enums;
-using PSCredentialManager.CredentialManagerApi.DataStructures;
+﻿using Microsoft.Win32.SafeHandles;
+using PSCredentialManager.Api.Utility;
+using PSCredentialManager.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using Microsoft.Win32.SafeHandles;
+using System.Threading.Tasks;
 
-namespace PSCredentialManager.CredentialManagerApi.Support
+namespace PSCredentialManager.Api
 {
     sealed class CriticalCredentialHandle : CriticalHandleZeroOrMinusOneIsInvalid
     {
@@ -21,11 +22,11 @@ namespace PSCredentialManager.CredentialManagerApi.Support
             if (!IsInvalid)
             {
                 // Get the Credential from the mem location
-                NativeCredential nativeCredential = (NativeCredential)Marshal.PtrToStructure(handle,typeof(NativeCredential));
+                NativeCredential nativeCredential = (NativeCredential)Marshal.PtrToStructure(handle, typeof(NativeCredential));
 
                 // Create a managed Credential type and fill it with data from the native counterpart.
                 Credential credential = new Credential();
-                credential = credential.ConvertToCredential(nativeCredential);
+                credential = CredentialUtility.ConvertToCredential(nativeCredential);
                 return credential;
             }
             else
@@ -63,7 +64,7 @@ namespace PSCredentialManager.CredentialManagerApi.Support
                 IntPtr pCred = Marshal.ReadIntPtr(handle, inx * IntPtr.Size);
                 NativeCredential nativeCredential = (NativeCredential)Marshal.PtrToStructure(pCred, typeof(NativeCredential));
                 Credential credential = new Credential();
-                credential = credential.ConvertToCredential(nativeCredential);
+                credential = CredentialUtility.ConvertToCredential(nativeCredential);
                 Credentials[inx] = credential;
             }
             return Credentials;
