@@ -1,5 +1,6 @@
 ﻿using PSCredentialManager.Common;
 using PSCredentialManager.Object.Enum;
+using PSCredentialManager.Common.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace PSCredentialManager.Api
 {
     public class CredentialManager
     {
-        public bool WriteCred(NativeCredential Credential)
+        public void WriteCred(NativeCredential Credential)
         {
             // Write the info into the CredMan storage.
             bool written = Imports.CredWrite(ref Credential, 0);
@@ -21,54 +22,57 @@ namespace PSCredentialManager.Api
                 string message = string.Format("CredWrite failed with the error code {0}.", LastError);
                 throw new Exception(message);
             }
-            return written;
         }
 
         public Credential ReadCred(string target, CRED_TYPE type)
         {
-            IntPtr NativeCredentialPointer;
-            Credential credential = new Credential();
+            IntPtr nativeCredentialPointer;
 
-            bool Read = Imports.CredRead(target, type, 0, out NativeCredentialPointer);
+            bool Read = Imports.CredRead(target, type, 0, out nativeCredentialPointer);
             int LastError = Marshal.GetLastWin32Error();
             if (Read)
             {
-                using (CriticalCredentialHandle critCred = new CriticalCredentialHandle(NativeCredentialPointer))
+                using (CriticalCredentialHandle critCred = new CriticalCredentialHandle(nativeCredentialPointer))
                 {
-                    credential = critCred.GetCredential();
+                    return critCred.GetCredential();
                 }
-                return credential;
             }
             else
             {
-                string message = string.Format("CredRead failed with the error code {0}.", LastError);
-                throw new Exception(message);
+                string message;
+                switch (LastError)
+                {
+                    case 1168:
+                        message = string.Format("Requested credential with target {0} was not found, error code {1}", target, LastError);
+                        throw new CredentialNotFoundException(message);
+                    default:
+                        message = string.Format("CredRead failed with the error code {0}.", LastError);
+                        throw new Exception(message);
+                }
+                
             }
         }
 
-        public bool DeleteCred(string target, CRED_TYPE type)
+        public void DeleteCred(string target, CRED_TYPE type)
         {
             bool Delete = Imports.CredDelete(target, type, 0);
             int LastError = Marshal.GetLastWin32Error();
 
             if (!Delete)
             {
-                string message = string.Format("CredRead failed with the error code {0}.", LastError);
+                string message = string.Format("DeleteCred failed with the error code {0}.", LastError);
                 throw new Exception(message);
             }
-            return Delete;
         }
 
-        public Credential[] ReadCred()
+        public IEnumerable<Credential> ReadCred()
         {
-            int Count = 0;
-            int Flags = 0x0;
-            string Filter = null;
-            Credential[] Credentials;
+            int count = 0;
+            int flags = 0x0;
 
             if (6 <= Environment.OSVersion.Version.Major)
             {
-                Flags = 0x1;
+                flags = 0x1;
             }
             else
             {
@@ -77,14 +81,13 @@ namespace PSCredentialManager.Api
             }
 
             IntPtr pCredentials = IntPtr.Zero;
-            bool Read = Imports.CredEnumerate(Filter, Flags, out Count, out pCredentials);
+            bool Read = Imports.CredEnumerate(null, flags, out count, out pCredentials);
             int LastError = Marshal.GetLastWin32Error();
 
             if (Read)
             {
                 CriticalCredentialHandle CredHandle = new CriticalCredentialHandle(pCredentials);
-                Credentials = CredHandle.GetCredentials(Count);
-                return Credentials;
+                return CredHandle.GetCredentials(count);
             }
             else
             {
