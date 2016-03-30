@@ -6,6 +6,8 @@ using PSCredentialManager.Api;
 using PSCredentialManager.Common;
 using PSCredentialManager.Utility;
 using PSCredentialManager.Api.Utility;
+using PSCredentialManager.Common.Exceptions;
+using System.Collections.Generic;
 
 namespace PSCredentialManager
 {
@@ -26,7 +28,6 @@ namespace PSCredentialManager
         //Initiate variables and credential manager
         CredentialManager Manager = new CredentialManager();
         PSCredential PsCredential;
-
         protected override void BeginProcessing()
         {
 
@@ -37,7 +38,7 @@ namespace PSCredentialManager
             if (Target == null)
             {
                 //If no target is specified get all available credentials from the store
-                Credential[] credential;
+                IEnumerable<Credential> credential;
                 try
                 {                    
                     credential = Manager.ReadCred();
@@ -68,43 +69,53 @@ namespace PSCredentialManager
                 catch (Exception exception)
                 {
                     ErrorRecord errorRecord = new ErrorRecord(exception, "1", ErrorCategory.InvalidOperation, Target);
-                    ThrowTerminatingError(errorRecord);
+                    WriteError(errorRecord);
                 }
             }
             else
             {
                 Credential credential = new Credential();
+                bool shouldContinue = true;
                 try
                 {
                     //Retrieve credential from Cred Store
                     WriteVerbose("Retrieving requested credential from Windows Credential Manager");
                     credential = Manager.ReadCred(Target, Type);
                 }
+                catch (CredentialNotFoundException exception)
+                {
+                    WriteDebug(exception.Message);
+                    shouldContinue = false;
+                }
                 catch (Exception exception)
                 {
                     ErrorRecord errorRecord = new ErrorRecord(exception, "1", ErrorCategory.InvalidOperation, Target);
-                    ThrowTerminatingError(errorRecord);
+                    WriteError(errorRecord);
                 }
 
-                if (AsPsCredential)
+                if (shouldContinue)
                 {
-                    //if AsPSCredential is specified create PS credential object and write to pipeline
-                    WriteVerbose("Converting returned credential blob to PSCredential Object");
-                    try
+                    if (AsPsCredential)
                     {
-                        PsCredential = PSCredentialUtility.ConvertToPSCredential(credential);
-                        WriteObject(PsCredential);
+                        //if AsPSCredential is specified create PS credential object and write to pipeline
+                        WriteVerbose("Converting returned credential blob to PSCredential Object");
+                        try
+                        {
+                            PsCredential = PSCredentialUtility.ConvertToPSCredential(credential);
+                            WriteObject(PsCredential);
+                        }
+                        catch
+                        {
+                            WriteWarning("Unable to convert Credential object without username or password to PSCredential object");
+                        }
                     }
-                    catch
+                    else
                     {
-                        WriteWarning("Unable to convert Credential object without username or password to PSCredential object");
+                        //write credential object to pipeline
+                        WriteObject(credential);
                     }
                 }
-                else
-                {
-                    //write credential object to pipeline
-                    WriteObject(credential);
-                }
+                
             }            
         }
 
