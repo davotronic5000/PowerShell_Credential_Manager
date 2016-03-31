@@ -8,6 +8,7 @@ using PSCredentialManager.Utility;
 using PSCredentialManager.Api.Utility;
 using PSCredentialManager.Common.Exceptions;
 using System.Collections.Generic;
+using System.Security;
 
 namespace PSCredentialManager
 {
@@ -136,8 +137,11 @@ namespace PSCredentialManager
         [Parameter()]
         public string UserName = System.Environment.UserName.ToString();
 
-        [Parameter()]
+        [Parameter(ParameterSetName = "Plain Text")]  
         public string Password = System.Web.Security.Membership.GeneratePassword(10, 2);
+
+        [Parameter(ParameterSetName = "Secure String")]
+        public SecureString SecurePassword; //= System.Web.Security.Membership.GeneratePassword(10, 2).ToSecureString();
 
         [Parameter()]
         public string Comment = "Updated by: " + System.Environment.UserName.ToString() + " on: " + DateTime.Now.ToShortDateString();
@@ -146,7 +150,7 @@ namespace PSCredentialManager
         public CRED_TYPE Type = CRED_TYPE.GENERIC;
 
         [Parameter()]
-        public CRED_PERSIST Persist = CRED_PERSIST.SESSION;
+        public CRED_PERSIST Persist = CRED_PERSIST.SESSION;       
 
         //Initiate variables and credential manager
         CredentialManager Manager = new CredentialManager();
@@ -155,19 +159,38 @@ namespace PSCredentialManager
 
         protected override void BeginProcessing()
         {
-            //Argument validation
-            //Check password does not exceed 512 bytes
-            byte[] byteArray = Encoding.Unicode.GetBytes(Password);
-            if (byteArray.Length > 512)
-            {                
-                Exception exception = new ArgumentOutOfRangeException("Password", "The specified password has exceeded 512 bytes");
-                ErrorRecord error = new ErrorRecord(exception, "1", ErrorCategory.InvalidArgument , Password);
-                WriteError(error);
-            }               
+            //Check if Password or SecurePassword is set and validate the password is valid.
+
+            if (MyInvocation.BoundParameters.ContainsKey("Password"))
+            {
+                //Argument validation
+                //Check password does not exceed 512 bytes
+                byte[] byteArray = Encoding.Unicode.GetBytes(Password);
+                if (byteArray.Length > 512)
+                {
+                    Exception exception = new ArgumentOutOfRangeException("Password", "The specified password has exceeded 512 bytes");
+                    ErrorRecord error = new ErrorRecord(exception, "1", ErrorCategory.InvalidArgument, Password);
+                    WriteError(error);
+                }
+            }
+
+            if (MyInvocation.BoundParameters.ContainsKey("SecurePassword"))
+            {
+                //Argument validation
+                //Check password does not exceed 512 bytes
+                byte[] byteArray = Encoding.Unicode.GetBytes(Password);
+                if (byteArray.Length > 512)
+                {
+                    Exception exception = new ArgumentOutOfRangeException("SecurePassword", "The specified password has exceeded 512 bytes");
+                    ErrorRecord error = new ErrorRecord(exception, "1", ErrorCategory.InvalidArgument, Password);
+                    WriteError(error);
+                }
+                Password = SecurePassword.ToInsecureString();
+            }
         }
 
         protected override void ProcessRecord()
-        {
+        {            
             //Create credential object
             Credential.TargetName = Target;
             Credential.CredentialBlob = Password;
