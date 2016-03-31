@@ -52,7 +52,7 @@ namespace PSCredentialManager.Cmdlet
                         {
                             try
                             {
-                                PsCredential = PSCredentialUtility.ConvertToPSCredential(cred);
+                                PsCredential = cred.ToPSCredential();
                                 WriteObject(PsCredential);
                             }
                             catch
@@ -102,7 +102,7 @@ namespace PSCredentialManager.Cmdlet
                         WriteVerbose("Converting returned credential blob to PSCredential Object");
                         try
                         {
-                            PsCredential = PSCredentialUtility.ConvertToPSCredential(credential);
+                            PsCredential = credential.ToPSCredential();
                             WriteObject(PsCredential);
                         }
                         catch
@@ -204,7 +204,7 @@ namespace PSCredentialManager.Cmdlet
             Credential.UserName = UserName;
 
             //Convert credential to native credential
-            nativeCredential = CredentialUtility.ConvertToNativeCredential(Credential);
+            nativeCredential = Credential.ToNativeCredential();
             
             try
             {

@@ -1,17 +1,13 @@
 ﻿using PSCredentialManager.Common;
 using PSCredentialManager.Common.Enum;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PSCredentialManager.Api.Utility
 {
-    public static class CredentialUtility
+    public static class CustomExtensions
     {
-        public static Credential ConvertToCredential(NativeCredential nativeCredential)
+        public static Credential ToCredential(this NativeCredential nativeCredential)
         {
             Credential credential;
 
@@ -42,7 +38,7 @@ namespace PSCredentialManager.Api.Utility
             return credential;
         }
 
-        public static NativeCredential ConvertToNativeCredential(Credential credential)
+        public static NativeCredential ToNativeCredential(this Credential credential)
         {
             NativeCredential nativeCredential;
 

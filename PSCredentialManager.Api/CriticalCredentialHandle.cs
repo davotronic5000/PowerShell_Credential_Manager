@@ -2,11 +2,7 @@
 using PSCredentialManager.Api.Utility;
 using PSCredentialManager.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PSCredentialManager.Api
 {
@@ -26,7 +22,7 @@ namespace PSCredentialManager.Api
 
                 // Create a managed Credential type and fill it with data from the native counterpart.
                 Credential credential = new Credential();
-                credential = CredentialUtility.ConvertToCredential(nativeCredential);
+                credential = nativeCredential.ToCredential();
                 return credential;
             }
             else
@@ -64,7 +60,7 @@ namespace PSCredentialManager.Api
                 IntPtr pCred = Marshal.ReadIntPtr(handle, inx * IntPtr.Size);
                 NativeCredential nativeCredential = (NativeCredential)Marshal.PtrToStructure(pCred, typeof(NativeCredential));
                 Credential credential = new Credential();
-                credential = CredentialUtility.ConvertToCredential(nativeCredential);
+                credential = nativeCredential.ToCredential();
                 Credentials[inx] = credential;
             }
             return Credentials;
