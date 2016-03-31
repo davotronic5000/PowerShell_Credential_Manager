@@ -8,6 +8,7 @@ using PSCredentialManager.Utility;
 using PSCredentialManager.Api.Utility;
 using PSCredentialManager.Common.Exceptions;
 using System.Collections.Generic;
+using System.Security;
 
 namespace PSCredentialManager
 {
@@ -136,8 +137,11 @@ namespace PSCredentialManager
         [Parameter()]
         public string UserName = System.Environment.UserName.ToString();
 
-        [Parameter()]
+        [Parameter(ParameterSetName = "Plain Text")]  
         public string Password = System.Web.Security.Membership.GeneratePassword(10, 2);
+
+        [Parameter(ParameterSetName = "Secure String")]
+        public SecureString SecurePassword = System.Web.Security.Membership.GeneratePassword(10, 2).ToSecureString();
 
         [Parameter()]
         public string Comment = "Updated by: " + System.Environment.UserName.ToString() + " on: " + DateTime.Now.ToShortDateString();
