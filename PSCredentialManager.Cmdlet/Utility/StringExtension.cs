@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 
-namespace PSCredentialManager.Utility
+namespace PSCredentialManager.Cmdlet.Utility
 {
     public static class StringExtension
     {

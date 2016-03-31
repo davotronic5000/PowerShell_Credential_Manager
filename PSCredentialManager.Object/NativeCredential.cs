@@ -1,4 +1,4 @@
-﻿using PSCredentialManager.Object.Enum;
+﻿using PSCredentialManager.Common.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;

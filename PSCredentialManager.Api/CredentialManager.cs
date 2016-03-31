@@ -1,5 +1,5 @@
 ﻿using PSCredentialManager.Common;
-using PSCredentialManager.Object.Enum;
+using PSCredentialManager.Common.Enum;
 using PSCredentialManager.Common.Exceptions;
 using System;
 using System.Collections.Generic;

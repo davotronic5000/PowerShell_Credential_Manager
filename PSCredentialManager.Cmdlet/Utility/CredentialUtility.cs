@@ -6,7 +6,7 @@ using System.Management.Automation;
 using System.Security;
 using System.Text;
 
-namespace PSCredentialManager.Utility
+namespace PSCredentialManager.Cmdlet.Utility
 {
     public static class PSCredentialUtility
     {

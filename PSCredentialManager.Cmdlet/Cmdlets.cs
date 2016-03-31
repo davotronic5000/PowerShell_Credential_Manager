@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Text;
 using System.Management.Automation;
-using PSCredentialManager.Object.Enum;
+using PSCredentialManager.Common.Enum;
 using PSCredentialManager.Api;
 using PSCredentialManager.Common;
-using PSCredentialManager.Utility;
 using PSCredentialManager.Api.Utility;
 using PSCredentialManager.Common.Exceptions;
 using System.Collections.Generic;
 using System.Security;
+using PSCredentialManager.Cmdlet.Utility;
 
-namespace PSCredentialManager
+namespace PSCredentialManager.Cmdlet
 {
     [Cmdlet(VerbsCommon.Get, "StoredCredential")]
     public class GetStoredCredential : PSCmdlet
