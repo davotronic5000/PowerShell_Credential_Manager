@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Text;
 using System.Management.Automation;
-using PSCredentialManager.Object.Enum;
+using PSCredentialManager.Common.Enum;
 using PSCredentialManager.Api;
 using PSCredentialManager.Common;
-using PSCredentialManager.Utility;
 using PSCredentialManager.Api.Utility;
 using PSCredentialManager.Common.Exceptions;
 using System.Collections.Generic;
 using System.Security;
+using PSCredentialManager.Cmdlet.Utility;
 
-namespace PSCredentialManager
+namespace PSCredentialManager.Cmdlet
 {
     [Cmdlet(VerbsCommon.Get, "StoredCredential")]
     public class GetStoredCredential : PSCmdlet
@@ -52,7 +52,7 @@ namespace PSCredentialManager
                         {
                             try
                             {
-                                PsCredential = PSCredentialUtility.ConvertToPSCredential(cred);
+                                PsCredential = cred.ToPSCredential();
                                 WriteObject(PsCredential);
                             }
                             catch
@@ -102,7 +102,7 @@ namespace PSCredentialManager
                         WriteVerbose("Converting returned credential blob to PSCredential Object");
                         try
                         {
-                            PsCredential = PSCredentialUtility.ConvertToPSCredential(credential);
+                            PsCredential = credential.ToPSCredential();
                             WriteObject(PsCredential);
                         }
                         catch
@@ -204,7 +204,7 @@ namespace PSCredentialManager
             Credential.UserName = UserName;
 
             //Convert credential to native credential
-            nativeCredential = CredentialUtility.ConvertToNativeCredential(Credential);
+            nativeCredential = Credential.ToNativeCredential();
             
             try
             {

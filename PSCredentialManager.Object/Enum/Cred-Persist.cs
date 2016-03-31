@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PSCredentialManager.Object.Enum
+﻿namespace PSCredentialManager.Common.Enum
 {
     public enum CRED_PERSIST : uint
     {
