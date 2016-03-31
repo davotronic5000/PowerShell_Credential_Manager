@@ -17,6 +17,8 @@ namespace PSCredentialManager.Cmdlet
         internal static CredentialManager credentialManager = new CredentialManager();
 
         [Cmdlet(VerbsCommon.Get, "StoredCredential")]
+        [OutputType(typeof(PSCredential))]
+        [OutputType(typeof(Credential), ParameterSetName = new string[1]{"CredentialObject Output"})]
         public class GetStoredCredential : PSCmdlet
         {
             //Parameters
@@ -27,7 +29,7 @@ namespace PSCredentialManager.Cmdlet
             [Parameter()]
             public CRED_TYPE Type = CRED_TYPE.GENERIC;
 
-            [Parameter()]
+            [Parameter(ParameterSetName = "CredentialObject Output")]
             public SwitchParameter AsCredentialObject;
 
             //Initiate variables and credential manager
@@ -130,6 +132,7 @@ namespace PSCredentialManager.Cmdlet
         }
 
         [Cmdlet(VerbsCommon.New, "StoredCredential")]
+        [OutputType(typeof(Credential))]
         public class NewStoredCredential : PSCmdlet
         {
             //Parameters
@@ -267,6 +270,7 @@ namespace PSCredentialManager.Cmdlet
         }
 
         [Cmdlet(VerbsCommon.Get, "StrongPassword")]
+        [OutputType(typeof(string))]
         public class GetStrongPassword : PSCmdlet
         {
             //Parameters
