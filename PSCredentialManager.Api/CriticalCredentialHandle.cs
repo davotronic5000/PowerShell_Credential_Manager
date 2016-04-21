@@ -1,5 +1,5 @@
 ﻿using Microsoft.Win32.SafeHandles;
-using PSCredentialManager.Api.Utility;
+using PSCredentialManager.Api.Extensions;
 using PSCredentialManager.Common;
 using System;
 using System.Runtime.InteropServices;

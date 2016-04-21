@@ -4,11 +4,11 @@ using System.Management.Automation;
 using PSCredentialManager.Common.Enum;
 using PSCredentialManager.Api;
 using PSCredentialManager.Common;
-using PSCredentialManager.Api.Utility;
+using PSCredentialManager.Api.Extensions;
 using PSCredentialManager.Common.Exceptions;
 using System.Collections.Generic;
 using System.Security;
-using PSCredentialManager.Cmdlet.Utility;
+using PSCredentialManager.Cmdlet.Extensions;
 
 namespace PSCredentialManager.Cmdlet
 {
