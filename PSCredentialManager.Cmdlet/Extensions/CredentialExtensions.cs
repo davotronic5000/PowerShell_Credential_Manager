@@ -1,41 +1,15 @@
 ﻿using PSCredentialManager.Common;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
-using System.Runtime.InteropServices;
 using System.Security;
+using System.Text;
 
-namespace PSCredentialManager.Cmdlet.Utility
+namespace PSCredentialManager.Cmdlet.Extensions
 {
-    public static class CustomExtensions
+    public static class CredentialExtensions
     {
-        public static SecureString ToSecureString(this string str)
-        {
-            SecureString secureString = new SecureString();
-
-            foreach (char c in str)
-            {
-                secureString.AppendChar(c);
-            }
-
-            return secureString;
-        }
-
-        public static string ToInsecureString(this SecureString secureString)
-        {
-            IntPtr secureStringPtr = IntPtr.Zero;
-
-            try
-            {
-                secureStringPtr = Marshal.SecureStringToGlobalAllocUnicode(secureString);
-                return Marshal.PtrToStringUni(secureStringPtr);
-            }
-            finally
-            {
-                Marshal.ZeroFreeGlobalAllocUnicode(secureStringPtr);
-            }
-
-        }
-
         public static PSCredential ToPSCredential(this Credential credential)
         {
             PSCredential psCredential;
