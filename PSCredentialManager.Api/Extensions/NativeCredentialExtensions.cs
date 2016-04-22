@@ -25,7 +25,8 @@ namespace PSCredentialManager.Api.Extensions
                     TargetName = Marshal.PtrToStringUni(nativeCredential.TargetName),
                     TargetAlias = Marshal.PtrToStringUni(nativeCredential.TargetAlias),
                     Comment = Marshal.PtrToStringUni(nativeCredential.Comment),
-                    PaswordSize = nativeCredential.CredentialBlobSize
+                    PaswordSize = nativeCredential.CredentialBlobSize,
+                    LastWritten = nativeCredential.LastWritten.ToDateTime()
                 };
 
                 if (0 < nativeCredential.CredentialBlobSize)

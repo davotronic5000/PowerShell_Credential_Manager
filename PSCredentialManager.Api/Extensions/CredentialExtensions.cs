@@ -24,7 +24,8 @@ namespace PSCredentialManager.Api.Extensions
                     CredentialBlobSize = (UInt32)credential.PaswordSize,
                     TargetName = Marshal.StringToCoTaskMemUni(credential.TargetName),
                     CredentialBlob = Marshal.StringToCoTaskMemUni(credential.Password),
-                    UserName = Marshal.StringToCoTaskMemUni(credential.UserName)
+                    UserName = Marshal.StringToCoTaskMemUni(credential.UserName),
+                    LastWritten = credential.LastWritten.ToComFileTime()
                 };
             }
             catch (Exception ex)

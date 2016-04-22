@@ -24,7 +24,7 @@ namespace PSCredentialManager.Api.Extensions.Tests
                 Password = "April123!!",
                 PaswordSize = 20,
                 Flags = 0,
-                LastWritten = new System.Runtime.InteropServices.ComTypes.FILETIME(),
+                LastWritten = DateTime.Now,
                 Persist = Cred_Persist.LOCAL_MACHINE,
                 TargetName = "server01",
                 Type = Cred_Type.GENERIC,
