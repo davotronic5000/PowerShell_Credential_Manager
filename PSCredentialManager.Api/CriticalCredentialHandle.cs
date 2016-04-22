@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace PSCredentialManager.Api
 {
-    sealed class CriticalCredentialHandle : CriticalHandleZeroOrMinusOneIsInvalid
+    public class CriticalCredentialHandle : CriticalHandleZeroOrMinusOneIsInvalid
     {
         internal CriticalCredentialHandle(IntPtr preexistingHandle)
         {
