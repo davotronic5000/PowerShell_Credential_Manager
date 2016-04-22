@@ -16,14 +16,9 @@ namespace PSCredentialManager.Cmdlet.Extensions
 
             try
             {
-                if (credential.UserName != null && credential.CredentialBlob != null)
-                {
-                    SecureString password = new SecureString();
-                    foreach (char c in credential.CredentialBlob)
-                    {
-                        password.AppendChar(c);
-                    }
-                    psCredential = new PSCredential(credential.UserName, password);
+                if (credential.UserName != null && credential.Password != null)
+                {                                 
+                    psCredential = new PSCredential(credential.UserName, credential.Password.ToSecureString());
                 }
                 else
                 {

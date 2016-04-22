@@ -21,9 +21,9 @@ namespace PSCredentialManager.Api.Extensions
                     TargetAlias = IntPtr.Zero,
                     Type = credential.Type,
                     Persist = (uint)credential.Persist,
-                    CredentialBlobSize = (UInt32)credential.CredentialBlobSize,
+                    CredentialBlobSize = (UInt32)credential.PaswordSize,
                     TargetName = Marshal.StringToCoTaskMemUni(credential.TargetName),
-                    CredentialBlob = Marshal.StringToCoTaskMemUni(credential.CredentialBlob),
+                    CredentialBlob = Marshal.StringToCoTaskMemUni(credential.Password),
                     UserName = Marshal.StringToCoTaskMemUni(credential.UserName)
                 };
             }

@@ -27,7 +27,7 @@ namespace PSCredentialManager.Cmdlet
             public string Target;
 
             [Parameter()]
-            public CRED_TYPE Type = CRED_TYPE.GENERIC;
+            public Cred_Type Type = Cred_Type.GENERIC;
 
             [Parameter(ParameterSetName = "CredentialObject Output")]
             public SwitchParameter AsCredentialObject;
@@ -154,10 +154,10 @@ namespace PSCredentialManager.Cmdlet
             public string Comment = "Updated by: " + System.Environment.UserName.ToString() + " on: " + DateTime.Now.ToShortDateString();
 
             [Parameter()]
-            public CRED_TYPE Type = CRED_TYPE.GENERIC;
+            public Cred_Type Type = Cred_Type.GENERIC;
 
             [Parameter()]
-            public CRED_PERSIST Persist = CRED_PERSIST.SESSION;
+            public Cred_Persist Persist = Cred_Persist.SESSION;
 
             [Parameter(ValueFromPipeline = true, ParameterSetName = "PSCredentialObject")]
             public PSCredential Credentials;
@@ -206,8 +206,8 @@ namespace PSCredentialManager.Cmdlet
                 Credential credential = new Credential()
                 {
                     TargetName = Target,
-                    CredentialBlob = Password,
-                    CredentialBlobSize = (UInt32)Encoding.Unicode.GetBytes(Password).Length,
+                    Password = Password,
+                    PaswordSize = (UInt32)Encoding.Unicode.GetBytes(Password).Length,
                     AttributeCount = 0,
                     Attributes = IntPtr.Zero,
                     Comment = Comment,
@@ -247,7 +247,7 @@ namespace PSCredentialManager.Cmdlet
             public string Target;
 
             [Parameter()]
-            public CRED_TYPE Type = CRED_TYPE.GENERIC;
+            public Cred_Type Type = Cred_Type.GENERIC;
 
             protected override void BeginProcessing() { }
 
