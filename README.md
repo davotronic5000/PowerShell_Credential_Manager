@@ -28,6 +28,16 @@ Import the module in to your PowerShell session and full help is available in th
 
 ## History
 
+### v2.0
+- Implemented pipeline support for Get-StoredCredential.
+- Implemented pipeline support for New-StoredCredential.
+- Implemented pipeline support for Remove-StoredCredential.
+- Improved error handling to respect the Error Action Preference in PowerShell.
+- Changed AsPSCredential to a Switch parameter and renamed to AsCredentialObject on Get-StoredCredential to make it easier to use.
+- Added Credentials parameter to New-StoredCredential which accepts a PSCredential object instead of User name and Password.
+- Added SecuserPassword parameter to New-StoredCredential which accepts a SecureString as the password.
+- General refactoring and bug fixes. 
+
 ### v1.1 Bug Fix
 Fixed a bug where the username specified in the -UserName parameter was not being used to create the credential in the store. The username for the logged on user was being used instead. Issue logged https://github.com/davotronic5000/PowerShell_Credential_Manager/issues/8
 
