@@ -7,7 +7,7 @@ namespace PSCredentialManager.Api
 {
     public class Imports
     {
-        public static bool CredRead(string target, CRED_TYPE type, int reservedFlag, out IntPtr credentialPointer)
+        public static bool CredRead(string target, Cred_Type type, int reservedFlag, out IntPtr credentialPointer)
         {
             return NativeMethods.CredRead(target, type, reservedFlag, out credentialPointer);
         }
@@ -22,7 +22,7 @@ namespace PSCredentialManager.Api
             return NativeMethods.CredFree(credentialPointer);
         }
 
-        public static bool CredDelete(string target, CRED_TYPE type, int reservedFlag)
+        public static bool CredDelete(string target, Cred_Type type, int reservedFlag)
         {
             return NativeMethods.CredDelete(target, type, reservedFlag);
         }
@@ -37,7 +37,7 @@ namespace PSCredentialManager.Api
         private class NativeMethods
         {
             [DllImport("Advapi32.dll", EntryPoint = "CredReadW", CharSet = CharSet.Unicode, SetLastError = true)]
-            public static extern bool CredRead([In] string target, [In] CRED_TYPE type, [In] int reservedFlag, out IntPtr credentialPtr);
+            public static extern bool CredRead([In] string target, [In] Cred_Type type, [In] int reservedFlag, out IntPtr credentialPtr);
 
             [DllImport("Advapi32.dll", EntryPoint = "CredWriteW", CharSet = CharSet.Unicode, SetLastError = true)]
             public static extern bool CredWrite([In] ref NativeCredential userCredential, [In] UInt32 flags);
@@ -46,7 +46,7 @@ namespace PSCredentialManager.Api
             public static extern bool CredFree([In] IntPtr credentialPointer);
 
             [DllImport("Advapi32.dll", SetLastError = true, EntryPoint = "CredDeleteW", CharSet = CharSet.Unicode)]
-            public static extern bool CredDelete([In] string target, [In] CRED_TYPE type, [In] int reservedFlag);
+            public static extern bool CredDelete([In] string target, [In] Cred_Type type, [In] int reservedFlag);
 
             [DllImport("Advapi32.dll", SetLastError = true, EntryPoint = "CredEnumerateW", CharSet = CharSet.Unicode)]
             public static extern bool CredEnumerate([In] string filter, [In] int flags, out int count, out IntPtr credentialPtrs);

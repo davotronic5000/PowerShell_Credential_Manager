@@ -1,6 +1,6 @@
 ﻿namespace PSCredentialManager.Common.Enum
 {
-    public enum CRED_TYPE : uint
+    public enum Cred_Type : uint
     {
         GENERIC = 1,
         DOMAIN_PASSWORD = 2,

@@ -41,8 +41,8 @@ namespace PSCredentialManager.Api.Tests
         {
             using (ShimsContext.Create())
             {
-                ShimImports.CredReadStringCRED_TYPEInt32IntPtrOut =
-                    (string target, CRED_TYPE type, int flag, out IntPtr credentialPointer) =>
+                ShimImports.CredReadStringCred_TypeInt32IntPtrOut =
+                    (string target, Cred_Type type, int flag, out IntPtr credentialPointer) =>
                     {
                         credentialPointer = new IntPtr();
                         return true;
@@ -60,7 +60,7 @@ namespace PSCredentialManager.Api.Tests
                         return new Credential();
                     };
 
-                manager.ReadCred("server01", CRED_TYPE.GENERIC);
+                manager.ReadCred("server01", Cred_Type.GENERIC);
             }
         }
 
@@ -69,13 +69,13 @@ namespace PSCredentialManager.Api.Tests
         {
             using (ShimsContext.Create())
             {
-                ShimImports.CredDeleteStringCRED_TYPEInt32 =
-                    (string target, CRED_TYPE type, int flag) =>
+                ShimImports.CredDeleteStringCred_TypeInt32 =
+                    (string target, Cred_Type type, int flag) =>
                     {
                         return true;
                     };
 
-                manager.DeleteCred("server01", CRED_TYPE.GENERIC);
+                manager.DeleteCred("server01", Cred_Type.GENERIC);
             }
         }
 

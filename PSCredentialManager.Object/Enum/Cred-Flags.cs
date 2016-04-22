@@ -1,6 +1,6 @@
 ﻿namespace PSCredentialManager.Common.Enum
 {
-    public enum CRED_FLAGS : uint
+    public enum Cred_Flags : uint
     {
         NONE = 0x0,
         PROMPT_NOW = 0x2,

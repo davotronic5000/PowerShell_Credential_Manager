@@ -1,6 +1,6 @@
 ﻿namespace PSCredentialManager.Common.Enum
 {
-    public enum CRED_PERSIST : uint
+    public enum Cred_Persist : uint
     {
         SESSION = 1,
         LOCAL_MACHINE = 2,

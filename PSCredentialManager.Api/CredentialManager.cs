@@ -21,7 +21,7 @@ namespace PSCredentialManager.Api
             }
         }
 
-        public Credential ReadCred(string target, CRED_TYPE type)
+        public Credential ReadCred(string target, Cred_Type type)
         {
             IntPtr nativeCredentialPointer;
 
@@ -50,7 +50,7 @@ namespace PSCredentialManager.Api
             }
         }
 
-        public void DeleteCred(string target, CRED_TYPE type)
+        public void DeleteCred(string target, Cred_Type type)
         {
             bool Delete = Imports.CredDelete(target, type, 0);
             int LastError = Marshal.GetLastWin32Error();

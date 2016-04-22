@@ -8,13 +8,13 @@ namespace PSCredentialManager.Cmdlet.Extensions
 {
     public static class StringExtensions
     {
-        public static SecureString ToSecureString(this string str)
+        public static SecureString ToSecureString(this string insecureString)
         {
             SecureString secureString = new SecureString();
 
-            foreach (char c in str)
+            foreach (char character in insecureString)
             {
-                secureString.AppendChar(c);
+                secureString.AppendChar(character);
             }
 
             return secureString;

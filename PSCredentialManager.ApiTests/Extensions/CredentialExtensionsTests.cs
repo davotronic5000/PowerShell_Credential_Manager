@@ -21,13 +21,13 @@ namespace PSCredentialManager.Api.Extensions.Tests
                 AttributeCount = 0,
                 Attributes = new IntPtr(0),
                 Comment = "This is a comment",
-                CredentialBlob = "April123!!",
-                CredentialBlobSize = 20,
+                Password = "April123!!",
+                PaswordSize = 20,
                 Flags = 0,
                 LastWritten = new System.Runtime.InteropServices.ComTypes.FILETIME(),
-                Persist = CRED_PERSIST.LOCAL_MACHINE,
+                Persist = Cred_Persist.LOCAL_MACHINE,
                 TargetName = "server01",
-                Type = CRED_TYPE.GENERIC,
+                Type = Cred_Type.GENERIC,
                 UserName = "test-user"
             };
 
@@ -36,5 +36,6 @@ namespace PSCredentialManager.Api.Extensions.Tests
             Assert.IsNotNull(nativeCredential);
             Assert.IsInstanceOfType(nativeCredential, typeof(NativeCredential));
         }
+
     }
 }

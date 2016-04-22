@@ -20,17 +20,17 @@ namespace PSCredentialManager.Api.Extensions
                 {
                     Type = nativeCredential.Type,
                     Flags = nativeCredential.Flags,
-                    Persist = (CRED_PERSIST)nativeCredential.Persist,
+                    Persist = (Cred_Persist)nativeCredential.Persist,
                     UserName = Marshal.PtrToStringUni(nativeCredential.UserName),
                     TargetName = Marshal.PtrToStringUni(nativeCredential.TargetName),
                     TargetAlias = Marshal.PtrToStringUni(nativeCredential.TargetAlias),
                     Comment = Marshal.PtrToStringUni(nativeCredential.Comment),
-                    CredentialBlobSize = nativeCredential.CredentialBlobSize
+                    PaswordSize = nativeCredential.CredentialBlobSize
                 };
 
                 if (0 < nativeCredential.CredentialBlobSize)
                 {
-                    credential.CredentialBlob = Marshal.PtrToStringUni(nativeCredential.CredentialBlob, (int)nativeCredential.CredentialBlobSize / 2);
+                    credential.Password = Marshal.PtrToStringUni(nativeCredential.CredentialBlob, (int)nativeCredential.CredentialBlobSize / 2);
                 }
             }
             catch (Exception ex)
