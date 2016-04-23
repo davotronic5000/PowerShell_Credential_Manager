@@ -37,6 +37,7 @@ Import the module in to your PowerShell session and full help is available in th
 - Added Credentials parameter to New-StoredCredential which accepts a PSCredential object instead of User name and Password.
 - Added SecuserPassword parameter to New-StoredCredential which accepts a SecureString as the password.
 - Credential object now returns LastWritten as a DateTime instead of a ComType.FILETIME
+- Changing license to MIT from GPL
 - General refactoring and bug fixes. 
 
 ### v1.1 Bug Fix
