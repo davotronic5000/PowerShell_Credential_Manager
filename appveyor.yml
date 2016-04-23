@@ -4,9 +4,9 @@
 version: 2.0.{build}
 
 branches:
-only:
-- master
-- develop
+    only:
+        - master
+        - develop
 
 skip_tags: false
 
@@ -23,31 +23,31 @@ platform: Any CPU
 configuration: Release
 
 build:
-parallel: true
-project: PSCredentialManager.sln
+    parallel: true
+    project: PSCredentialManager.sln
 
-verbosity: detailed
+    verbosity: detailed
 
 #---------------------------------#
 #       tests configuration       #
 #---------------------------------#
 test:
-assemblies:
-- PSCredentialManager.CmdletTests.dll
-- PSCredentialManager.ApiTests.dll
+    assemblies:
+        - PSCredentialManager.CmdletTests.dll
+        - PSCredentialManager.ApiTests.dll
 
 #---------------------------------#
 #      artifacts configuration    #
 #---------------------------------#
-artifacts:
+
 
 #---------------------------------#
 #     deployment configuration    #
 #---------------------------------#
 deploy:
-- provider: GitHub
-draft: true
-prerelease: false
-on:
-branch: master
-appveytor_repo_tag: true
+    provider: GitHub
+    draft: true
+    prerelease: false
+    on:
+        branch: master
+        appveytor_repo_tag: true
