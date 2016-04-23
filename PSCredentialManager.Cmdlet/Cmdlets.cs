@@ -201,7 +201,7 @@ namespace PSCredentialManager.Cmdlet
                     UserName = Credentials.UserName;
                     Password = Credentials.GetNetworkCredential().Password;
                 }
-                
+
                 //Create credential object
                 Credential credential = new Credential()
                 {
@@ -214,7 +214,8 @@ namespace PSCredentialManager.Cmdlet
                     TargetAlias = null,
                     Type = Type,
                     Persist = Persist,
-                    UserName = UserName
+                    UserName = UserName,
+                    LastWritten = DateTime.Now,                    
                 };
             
                 
