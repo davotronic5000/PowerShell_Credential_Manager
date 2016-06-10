@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PSCredentialManager.Object.Enum
+﻿namespace PSCredentialManager.Common.Enum
 {
-    public enum CRED_PERSIST : uint
+    public enum CredPersist : uint
     {
-        SESSION = 1,
-        LOCAL_MACHINE = 2,
-        ENTERPRISE = 3
+        Session = 1,
+        LocalMachine = 2,
+        Enterprise = 3
     }
 }

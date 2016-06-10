@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PSCredentialManager.Object.Enum
+﻿namespace PSCredentialManager.Common.Enum
 {
-    public enum CRED_TYPE : uint
+    public enum CredType : uint
     {
-        GENERIC = 1,
-        DOMAIN_PASSWORD = 2,
-        DOMAIN_CERTIFICATE = 3,
-        DOMAIN_VISIBLE_PASSWORD = 4,
-        GENERIC_CERTIFICATE = 5,
-        DOMAIN_EXTENDED = 6,
-        MAXIMUM = 7,      // Maximum supported cred type
-        MAXIMUM_EX = (MAXIMUM + 1000),  // Allow new applications to run on old OSes
+        Generic = 1,
+        DomainPassword = 2,
+        DomainCertificate = 3,
+        DomainVisiblePassword = 4,
+        GenericCertificate = 5,
+        DomainExtended = 6,
+        Maximum = 7,      // Maximum supported cred type
+        MaximumEx = (Maximum + 1000),  // Allow new applications to run on old OSes
     }
 }

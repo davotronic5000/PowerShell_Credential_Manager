@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PSCredentialManager.Common.Enum
+﻿namespace PSCredentialManager.Common.Enum
 {
-    public enum CRED_FLAGS : uint
+    public enum CredFlags : uint
     {
-        NONE = 0x0,
-        PROMPT_NOW = 0x2,
-        USERNAME_TARGET = 0x4
+        None = 0x0,
+        PromptNow = 0x2,
+        UsernameTarget = 0x4
     }
 }

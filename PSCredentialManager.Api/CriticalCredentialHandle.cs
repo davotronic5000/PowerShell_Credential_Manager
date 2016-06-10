@@ -1,16 +1,12 @@
 ﻿using Microsoft.Win32.SafeHandles;
-using PSCredentialManager.Api.Utility;
+using PSCredentialManager.Api.Extensions;
 using PSCredentialManager.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PSCredentialManager.Api
 {
-    sealed class CriticalCredentialHandle : CriticalHandleZeroOrMinusOneIsInvalid
+    public class CriticalCredentialHandle : CriticalHandleZeroOrMinusOneIsInvalid
     {
         internal CriticalCredentialHandle(IntPtr preexistingHandle)
         {
@@ -25,8 +21,7 @@ namespace PSCredentialManager.Api
                 NativeCredential nativeCredential = (NativeCredential)Marshal.PtrToStructure(handle, typeof(NativeCredential));
 
                 // Create a managed Credential type and fill it with data from the native counterpart.
-                Credential credential = new Credential();
-                credential = CredentialUtility.ConvertToCredential(nativeCredential);
+                Credential credential = nativeCredential.ToCredential();
                 return credential;
             }
             else
@@ -35,7 +30,7 @@ namespace PSCredentialManager.Api
             }
         }
 
-        override protected bool ReleaseHandle()
+        protected override bool ReleaseHandle()
         {
             // If the handle was set, free it. Return success.
             if (!IsInvalid)
@@ -58,16 +53,15 @@ namespace PSCredentialManager.Api
                 throw new InvalidOperationException("Invalid CriticalHandle!");
             }
 
-            Credential[] Credentials = new Credential[count];
+            Credential[] credentials = new Credential[count];
             for (int inx = 0; inx < count; inx++)
             {
                 IntPtr pCred = Marshal.ReadIntPtr(handle, inx * IntPtr.Size);
                 NativeCredential nativeCredential = (NativeCredential)Marshal.PtrToStructure(pCred, typeof(NativeCredential));
-                Credential credential = new Credential();
-                credential = CredentialUtility.ConvertToCredential(nativeCredential);
-                Credentials[inx] = credential;
+                Credential credential = nativeCredential.ToCredential();
+                credentials[inx] = credential;
             }
-            return Credentials;
+            return credentials;
         }
 
     }

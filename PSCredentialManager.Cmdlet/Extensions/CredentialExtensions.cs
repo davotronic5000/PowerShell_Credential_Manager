@@ -1,29 +1,20 @@
 ﻿using PSCredentialManager.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using System.Security;
-using System.Text;
 
-namespace PSCredentialManager.Utility
+namespace PSCredentialManager.Cmdlet.Extensions
 {
-    public static class PSCredentialUtility
+    public static class CredentialExtensions
     {
-        public static PSCredential ConvertToPSCredential(Credential credential)
+        public static PSCredential ToPsCredential(this Credential credential)
         {
             PSCredential psCredential;
 
             try
             {
-                if (credential.UserName != null && credential.CredentialBlob != null)
-                {
-                    SecureString password = new SecureString();
-                    foreach (char c in credential.CredentialBlob)
-                    {
-                        password.AppendChar(c);
-                    }
-                    psCredential = new PSCredential(credential.UserName, password);
+                if (credential.UserName != null && credential.Password != null)
+                {                                 
+                    psCredential = new PSCredential(credential.UserName, credential.Password.ToSecureString());
                 }
                 else
                 {
