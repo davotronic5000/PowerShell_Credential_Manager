@@ -1,15 +1,12 @@
-﻿using Microsoft.QualityTools.Testing.Fakes;
+﻿using System;
+using Microsoft.QualityTools.Testing.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PSCredentialManager.Api;
 using PSCredentialManager.Api.Fakes;
 using PSCredentialManager.Common;
 using PSCredentialManager.Common.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace PSCredentialManager.Api.Tests
+namespace PSCredentialManager.ApiTests
 {
     [TestClass()]
     public class CredentialManagerTests
@@ -41,8 +38,8 @@ namespace PSCredentialManager.Api.Tests
         {
             using (ShimsContext.Create())
             {
-                ShimImports.CredReadStringCred_TypeInt32IntPtrOut =
-                    (string target, Cred_Type type, int flag, out IntPtr credentialPointer) =>
+                ShimImports.CredReadStringCredTypeInt32IntPtrOut =
+                    (string target, CredType type, int flag, out IntPtr credentialPointer) =>
                     {
                         credentialPointer = new IntPtr();
                         return true;
@@ -60,7 +57,7 @@ namespace PSCredentialManager.Api.Tests
                         return new Credential();
                     };
 
-                manager.ReadCred("server01", Cred_Type.GENERIC);
+                manager.ReadCred("server01", CredType.Generic);
             }
         }
 
@@ -69,13 +66,13 @@ namespace PSCredentialManager.Api.Tests
         {
             using (ShimsContext.Create())
             {
-                ShimImports.CredDeleteStringCred_TypeInt32 =
-                    (string target, Cred_Type type, int flag) =>
+                ShimImports.CredDeleteStringCredTypeInt32 =
+                    (string target, CredType type, int flag) =>
                     {
                         return true;
                     };
 
-                manager.DeleteCred("server01", Cred_Type.GENERIC);
+                manager.DeleteCred("server01", CredType.Generic);
             }
         }
 

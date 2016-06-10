@@ -8,7 +8,7 @@ namespace PSCredentialManager.Common
     public struct NativeCredential
     {
         public uint Flags;
-        public Cred_Type Type;
+        public CredType Type;
         public IntPtr TargetName;
         public IntPtr Comment;
         public System.Runtime.InteropServices.ComTypes.FILETIME LastWritten;

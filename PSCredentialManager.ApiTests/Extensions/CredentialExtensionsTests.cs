@@ -1,14 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PSCredentialManager.Api.Extensions;
 using PSCredentialManager.Common;
 using PSCredentialManager.Common.Enum;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 
-namespace PSCredentialManager.Api.Extensions.Tests
+namespace PSCredentialManager.ApiTests.Extensions
 {
     [TestClass()]
     public class CredentialExtensionsTests
@@ -25,9 +21,9 @@ namespace PSCredentialManager.Api.Extensions.Tests
                 PaswordSize = 20,
                 Flags = 0,
                 LastWritten = DateTime.Now,
-                Persist = Cred_Persist.LOCAL_MACHINE,
+                Persist = CredPersist.LocalMachine,
                 TargetName = "server01",
-                Type = Cred_Type.GENERIC,
+                Type = CredType.Generic,
                 UserName = "test-user"
             };
 

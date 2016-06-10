@@ -1,16 +1,12 @@
 ﻿using PSCredentialManager.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using System.Security;
-using System.Text;
 
 namespace PSCredentialManager.Cmdlet.Extensions
 {
     public static class CredentialExtensions
     {
-        public static PSCredential ToPSCredential(this Credential credential)
+        public static PSCredential ToPsCredential(this Credential credential)
         {
             PSCredential psCredential;
 

@@ -21,8 +21,7 @@ namespace PSCredentialManager.Api
                 NativeCredential nativeCredential = (NativeCredential)Marshal.PtrToStructure(handle, typeof(NativeCredential));
 
                 // Create a managed Credential type and fill it with data from the native counterpart.
-                Credential credential = new Credential();
-                credential = nativeCredential.ToCredential();
+                Credential credential = nativeCredential.ToCredential();
                 return credential;
             }
             else
@@ -31,7 +30,7 @@ namespace PSCredentialManager.Api
             }
         }
 
-        override protected bool ReleaseHandle()
+        protected override bool ReleaseHandle()
         {
             // If the handle was set, free it. Return success.
             if (!IsInvalid)
@@ -54,16 +53,15 @@ namespace PSCredentialManager.Api
                 throw new InvalidOperationException("Invalid CriticalHandle!");
             }
 
-            Credential[] Credentials = new Credential[count];
+            Credential[] credentials = new Credential[count];
             for (int inx = 0; inx < count; inx++)
             {
                 IntPtr pCred = Marshal.ReadIntPtr(handle, inx * IntPtr.Size);
                 NativeCredential nativeCredential = (NativeCredential)Marshal.PtrToStructure(pCred, typeof(NativeCredential));
-                Credential credential = new Credential();
-                credential = nativeCredential.ToCredential();
-                Credentials[inx] = credential;
+                Credential credential = nativeCredential.ToCredential();
+                credentials[inx] = credential;
             }
-            return Credentials;
+            return credentials;
         }
 
     }

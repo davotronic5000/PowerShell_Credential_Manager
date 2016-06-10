@@ -1,13 +1,10 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using System.Management.Automation;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PSCredentialManager.Cmdlet.Extensions;
 using PSCredentialManager.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management.Automation;
-using System.Text;
 
-namespace PSCredentialManager.Cmdlet.Extensions.Tests
+namespace PSCredentialManager.CmdletTests.Extensions
 {
     [TestClass()]
     public class CredentialExtensionsTests
@@ -21,7 +18,7 @@ namespace PSCredentialManager.Cmdlet.Extensions.Tests
                 Password = "Password1"
             };
 
-            PSCredential psCredential = credential.ToPSCredential();
+            PSCredential psCredential = credential.ToPsCredential();
 
             Assert.IsNotNull(psCredential);
             Assert.IsInstanceOfType(psCredential, typeof(PSCredential));
@@ -36,7 +33,7 @@ namespace PSCredentialManager.Cmdlet.Extensions.Tests
                 UserName = "test-user",
             };
 
-            PSCredential psCredential = credential.ToPSCredential();
+            PSCredential psCredential = credential.ToPsCredential();
             
         }
     }

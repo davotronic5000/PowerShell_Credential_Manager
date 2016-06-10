@@ -1,10 +1,10 @@
-﻿using PSCredentialManager.Api.Extensions;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+using PSCredentialManager.Api.Extensions;
 using PSCredentialManager.Common;
 using PSCredentialManager.Common.Enum;
 
-namespace PSCredentialManager.Api.Extensions.Tests
+namespace PSCredentialManager.ApiTests.Extensions
 {
     [TestClass()]
     public class NativeCredentialExtensionsTests
@@ -24,7 +24,7 @@ namespace PSCredentialManager.Api.Extensions.Tests
                 Persist = 0,
                 TargetAlias = new IntPtr(0),
                 TargetName = new IntPtr(0),
-                Type = Cred_Type.GENERIC,
+                Type = CredType.Generic,
                 UserName = new IntPtr(0)
             };
 

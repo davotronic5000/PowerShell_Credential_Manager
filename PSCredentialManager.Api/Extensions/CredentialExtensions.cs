@@ -1,5 +1,4 @@
 ﻿using PSCredentialManager.Common;
-using PSCredentialManager.Common.Enum;
 using System;
 using System.Runtime.InteropServices;
 
@@ -21,7 +20,7 @@ namespace PSCredentialManager.Api.Extensions
                     TargetAlias = IntPtr.Zero,
                     Type = credential.Type,
                     Persist = (uint)credential.Persist,
-                    CredentialBlobSize = (UInt32)credential.PaswordSize,
+                    CredentialBlobSize = credential.PaswordSize,
                     TargetName = Marshal.StringToCoTaskMemUni(credential.TargetName),
                     CredentialBlob = Marshal.StringToCoTaskMemUni(credential.Password),
                     UserName = Marshal.StringToCoTaskMemUni(credential.UserName),

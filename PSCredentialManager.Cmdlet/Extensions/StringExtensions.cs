@@ -1,8 +1,4 @@
-﻿using PSCredentialManager.Common;
-using System;
-using System.Management.Automation;
-using System.Runtime.InteropServices;
-using System.Security;
+﻿using System.Security;
 
 namespace PSCredentialManager.Cmdlet.Extensions
 {

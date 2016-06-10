@@ -8,13 +8,13 @@ namespace PSCredentialManager.Common
     public struct Credential
     {
         public uint Flags;
-        public Cred_Type Type;
+        public CredType Type;
         public string TargetName;
         public string Comment;
         public DateTime LastWritten;
         public uint PaswordSize;
         public string Password;
-        public Cred_Persist Persist;
+        public CredPersist Persist;
         public uint AttributeCount;
         public IntPtr Attributes;
         public string TargetAlias;

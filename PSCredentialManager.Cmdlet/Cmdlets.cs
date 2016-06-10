@@ -12,13 +12,13 @@ using PSCredentialManager.Cmdlet.Extensions;
 
 namespace PSCredentialManager.Cmdlet
 {
-    public class PSCredentialCmdlets
+    public class PsCredentialCmdlets
     {
-        internal static CredentialManager credentialManager = new CredentialManager();
+        static readonly CredentialManager CredentialManager = new CredentialManager();
 
         [Cmdlet(VerbsCommon.Get, "StoredCredential")]
         [OutputType(typeof(PSCredential))]
-        [OutputType(typeof(Credential), ParameterSetName = new string[1]{"CredentialObject Output"})]
+        [OutputType(typeof(Credential), ParameterSetName = new[]{"CredentialObject Output"})]
         public class GetStoredCredential : PSCmdlet
         {
             //Parameters
@@ -27,7 +27,7 @@ namespace PSCredentialManager.Cmdlet
             public string Target;
 
             [Parameter()]
-            public Cred_Type Type = Cred_Type.GENERIC;
+            public CredType Type = CredType.Generic;
 
             [Parameter(ParameterSetName = "CredentialObject Output")]
             public SwitchParameter AsCredentialObject;
@@ -47,7 +47,7 @@ namespace PSCredentialManager.Cmdlet
                     IEnumerable<Credential> credential;
                     try
                     {
-                        credential = credentialManager.ReadCred();
+                        credential = CredentialManager.ReadCred();
 
                         if (!AsCredentialObject)
                         {                     
@@ -60,7 +60,7 @@ namespace PSCredentialManager.Cmdlet
 
                                 try
                                 {
-                                    PSCredential psCredential = cred.ToPSCredential();
+                                    PSCredential psCredential = cred.ToPsCredential();
                                     WriteObject(psCredential);
                                 }
                                 catch
@@ -89,7 +89,7 @@ namespace PSCredentialManager.Cmdlet
                     {
                         //Retrieve credential from Cred Store
                         WriteVerbose("Retrieving requested credential from Windows Credential Manager");
-                        credential = credentialManager.ReadCred(Target, Type);
+                        credential = CredentialManager.ReadCred(Target, Type);
                     }
                     catch (CredentialNotFoundException exception)
                     {
@@ -110,7 +110,7 @@ namespace PSCredentialManager.Cmdlet
                             WriteVerbose("Converting returned credential blob to PSCredential Object");
                             try
                             {
-                                PSCredential psCredential = credential.ToPSCredential();
+                                PSCredential psCredential = credential.ToPsCredential();
                                 WriteObject(psCredential);
                             }
                             catch
@@ -138,11 +138,11 @@ namespace PSCredentialManager.Cmdlet
             //Parameters
             [Parameter()]
             [ValidateLength(1, 337)]
-            public string Target = System.Environment.MachineName;
+            public string Target = Environment.MachineName;
 
             [Parameter(ParameterSetName = "Plain Text")]
             [Parameter(ParameterSetName = "Secure String")]
-            public string UserName = System.Environment.UserName.ToString();
+            public string UserName = Environment.UserName;
 
             [Parameter(ParameterSetName = "Plain Text")]
             public string Password = System.Web.Security.Membership.GeneratePassword(10, 2);
@@ -151,13 +151,13 @@ namespace PSCredentialManager.Cmdlet
             public SecureString SecurePassword;
 
             [Parameter()]
-            public string Comment = "Updated by: " + System.Environment.UserName.ToString() + " on: " + DateTime.Now.ToShortDateString();
+            public string Comment = "Updated by: " + Environment.UserName + " on: " + DateTime.Now.ToShortDateString();
 
             [Parameter()]
-            public Cred_Type Type = Cred_Type.GENERIC;
+            public CredType Type = CredType.Generic;
 
             [Parameter()]
-            public Cred_Persist Persist = Cred_Persist.SESSION;
+            public CredPersist Persist = CredPersist.Session;
 
             [Parameter(ValueFromPipeline = true, ParameterSetName = "PSCredentialObject")]
             public PSCredential Credentials;
@@ -173,7 +173,7 @@ namespace PSCredentialManager.Cmdlet
                     byte[] byteArray = Encoding.Unicode.GetBytes(Password);
                     if (byteArray.Length > 512)
                     {
-                        Exception exception = new ArgumentOutOfRangeException("Password", "The specified password has exceeded 512 bytes");
+                        Exception exception = new ArgumentOutOfRangeException($"Password", "The specified password has exceeded 512 bytes");
                         ErrorRecord error = new ErrorRecord(exception, "1", ErrorCategory.InvalidArgument, Password);
                         WriteError(error);
                     }
@@ -186,7 +186,7 @@ namespace PSCredentialManager.Cmdlet
                     byte[] byteArray = Encoding.Unicode.GetBytes(Password);
                     if (byteArray.Length > 512)
                     {
-                        Exception exception = new ArgumentOutOfRangeException("SecurePassword", "The specified password has exceeded 512 bytes");
+                        Exception exception = new ArgumentOutOfRangeException($"SecurePassword", "The specified password has exceeded 512 bytes");
                         ErrorRecord error = new ErrorRecord(exception, "1", ErrorCategory.InvalidArgument, Password);
                         WriteError(error);
                     }
@@ -227,7 +227,7 @@ namespace PSCredentialManager.Cmdlet
                 {
                     //Write credential to Windows Credential manager
                     WriteVerbose("Writing credential to Windows Credential Manager");
-                    credentialManager.WriteCred(nativeCredential);
+                    CredentialManager.WriteCred(nativeCredential);
                     WriteObject(credential);
                 }
                 catch (Exception exception)
@@ -248,7 +248,7 @@ namespace PSCredentialManager.Cmdlet
             public string Target;
 
             [Parameter()]
-            public Cred_Type Type = Cred_Type.GENERIC;
+            public CredType Type = CredType.Generic;
 
             protected override void BeginProcessing() { }
 
@@ -258,7 +258,7 @@ namespace PSCredentialManager.Cmdlet
                 try
                 {
                     WriteVerbose("Deleting requested credential from Windows Credential Manager");
-                    credentialManager.DeleteCred(Target, Type);
+                    CredentialManager.DeleteCred(Target, Type);
                 }
                 catch (Exception exception)
                 {
@@ -280,9 +280,6 @@ namespace PSCredentialManager.Cmdlet
 
             [Parameter()]
             public int NumberOfSpecialCharacters = 3;
-
-            //Initiate variables
-            string Password = string.Empty;
 
             protected override void BeginProcessing() { }
 

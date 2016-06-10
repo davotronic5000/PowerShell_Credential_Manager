@@ -1,10 +1,7 @@
 ﻿using PSCredentialManager.Common;
 using PSCredentialManager.Common.Enum;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace PSCredentialManager.Api.Extensions
 {
@@ -20,7 +17,7 @@ namespace PSCredentialManager.Api.Extensions
                 {
                     Type = nativeCredential.Type,
                     Flags = nativeCredential.Flags,
-                    Persist = (Cred_Persist)nativeCredential.Persist,
+                    Persist = (CredPersist)nativeCredential.Persist,
                     UserName = Marshal.PtrToStringUni(nativeCredential.UserName),
                     TargetName = Marshal.PtrToStringUni(nativeCredential.TargetName),
                     TargetAlias = Marshal.PtrToStringUni(nativeCredential.TargetAlias),
