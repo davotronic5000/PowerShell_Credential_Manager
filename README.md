@@ -1,6 +1,9 @@
 # PowerShell Credential Manager
 PowerShell Module to Read and Write Credentials from the Windows Credential Manager
 
+## Ongoing Development and Support
+I am no longer working on this project or PowerShell much at all.  If anyone else wants to take a fork and continue supporting this project. I would be happy to link to that project from here to guide people in the right direction.
+
 ## Installation
 ###PowerShell Gallery Installation
 The module is available on the PowerShell Gallery: https://www.powershellgallery.com/packages/CredentialManager/1.0.0.
